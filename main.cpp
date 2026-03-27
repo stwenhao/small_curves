@@ -69,7 +69,7 @@ bool is_valid_point(int x,int y,int p)
     return (y_square==x_cube_plus_b);
 }
 
-int count_points(int p)
+int count_points_slow(int p)
 {
     int n=1;
     for(int y=1;y<p;++y)
@@ -82,6 +82,7 @@ int count_points(int p)
             }
         }
     }
+    //std::cout<<"count_points_slow("<<p<<")="<<n<<'\n';
     return n;
 }
 
@@ -105,21 +106,16 @@ int previous_prime(int value)
     return result;
 }
 
-void print_counted_points()
-{
-    int p=67;
-    while(p<100)
-    {
-        std::cout<<"p="<<p<<", n="<<count_points(p)<<'\n';
-        p=next_prime(p);
-    }
-}
-
 struct Point
 {
     int x;
     int y;
 };
+
+bool are_points_equal(Point first,Point second)
+{
+    return (first.x==second.x)&&(first.y==second.y);
+}
 
 Point find_nearest_point(int p)
 {
@@ -141,11 +137,83 @@ Point find_nearest_point(int p)
     return result;
 }
 
+Point double_point(Point base,int p)
+{
+    int px_square=(base.x*base.x)%p;
+    int px_square_3=(3*px_square)%p;
+    int py_double=(2*base.y)%p;
+    int invert_py_double=calculate_inverse(py_double,p);
+    int c=(px_square_3*invert_py_double)%p;
+    int c_square=(c*c)%p;
+    int px_double=(2*base.x)%p;
+    int minus_px_double=p-px_double;
+    Point result;
+    result.x=(c_square+minus_px_double)%p;
+    int minus_rx=p-result.x;
+    int px_rx_diff=(base.x+minus_rx)%p;
+    int c_px_rx_diff=(c*px_rx_diff)%p;
+    int minus_py=p-base.y;
+    result.y=(c_px_rx_diff+minus_py)%p;
+    return result;
+}
+
+Point add_points(Point first,Point second,int p)
+{
+    if(are_points_equal(first,second))
+    {
+        return double_point(first,p);
+    }
+    if(first.x==second.x)
+    {
+        Point zero;
+        zero.x=0;
+        zero.y=0;
+        return zero;
+    }
+    if((first.x==0)&&(first.y==0))
+    {
+        return second;
+    }
+    if((second.x==0)&&(second.y==0))
+    {
+        return first;
+    }
+    int minus_py=p-first.y;
+    int diff_y=(second.y+minus_py)%p;
+    int minus_px=p-first.x;
+    int diff_x=(second.x+minus_px)%p;
+    int invert_diff_x=calculate_inverse(diff_x,p);
+    int c=(diff_y*invert_diff_x)%p;
+    int c_square=(c*c)%p;
+    int minus_qx=p-second.x;
+    Point result;
+    result.x=(c_square+minus_px+minus_qx)%p;
+    int minus_rx=p-result.x;
+    int px_rx_diff=(first.x+minus_rx)%p;
+    int c_px_rx_diff=(c*px_rx_diff)%p;
+    result.y=(c_px_rx_diff+minus_py)%p;
+    return result;
+}
+
+int count_points_faster(int p)
+{
+    int n=1;
+    Point base=find_nearest_point(p);
+    Point second=double_point(base,p);
+    while(!(are_points_equal(second,base)))
+    {
+        second=add_points(second,base,p);
+        ++n;
+    }
+    std::cout<<"count_points_faster("<<p<<")="<<n<<'\n';
+    return n;
+}
+
 void print_first_example()
 {
     int p=79;
     Point base=find_nearest_point(p);
-    std::cout<<"p="<<p<<", n="<<count_points(p)
+    std::cout<<"p="<<p<<", n="<<count_points_faster(p)
              <<", base=("<<base.x<<','<<base.y<<")\n";
 }
 
@@ -155,14 +223,14 @@ void find_n_bit(int bits)
     int min=(1<<(bits-1));
     while(p>min)
     {
-        int n=count_points(p);
+        int n=count_points_faster(p);
         if((n!=p)&&(is_prime(n)))
         {
-            int second_p=count_points(n);
+            int second_p=count_points_faster(n);
             if(p==second_p)
             {
                 Point base=find_nearest_point(p);
-                std::cout<<"p="<<p<<", n="<<count_points(p)
+                std::cout<<"p="<<p<<", n="<<n
                          <<", base=("<<base.x<<','<<base.y<<") "
                          <<bits<<"-bit\n";
                 return;
