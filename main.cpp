@@ -205,7 +205,7 @@ int count_points_faster(int p)
         second=add_points(second,base,p);
         ++n;
     }
-    std::cout<<"count_points_faster("<<p<<")="<<n<<'\n';
+    //std::cout<<"count_points_faster("<<p<<")="<<n<<'\n';
     return n;
 }
 
@@ -242,7 +242,7 @@ void find_n_bit(int bits)
 
 int main()
 {
-    for(int i=2;i<14;++i)
+    for(int i=5;i<15;++i)
     {
         find_n_bit(i);
     }
