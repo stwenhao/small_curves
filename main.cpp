@@ -1,7 +1,19 @@
+#include <cstdint>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <vector>
 
-bool is_prime(int number)
+std::string to_string_32(std::uint32_t number)
+{
+    std::ostringstream out;
+    out.width(8);
+    out.fill('0');
+    out<<std::hex<<number;
+    return out.str();
+}
+
+bool is_prime(std::uint32_t number)
 {
     if(number<2)
     {
@@ -15,7 +27,7 @@ bool is_prime(int number)
     {
         return false;
     }
-    for(int i=3;i<=number/i;i+=2)
+    for(std::uint32_t i=3;i<=number/i;i+=2)
     {
         if(number==i)
         {
@@ -31,7 +43,7 @@ bool is_prime(int number)
 
 void print_primes()
 {
-    for(int i=0;i<100;++i)
+    for(std::uint32_t i=0;i<100;++i)
     {
         if(is_prime(i))
         {
@@ -41,9 +53,9 @@ void print_primes()
     std::cout<<'\n';
 }
 
-int calculate_inverse(int number,int modulo)
+std::uint32_t calculate_inverse(std::uint32_t number,std::uint32_t modulo)
 {
-    int result=1;
+    std::uint32_t result=1;
     while(((number*result)%modulo)!=1)
     {
         ++result;
@@ -53,49 +65,49 @@ int calculate_inverse(int number,int modulo)
 
 void print_inverses()
 {
-    int p=67;
-    for(int i=1;i<p;++i)
+    std::uint32_t p=67;
+    for(std::uint32_t i=1;i<p;++i)
     {
         std::cout<<"inv("<<i<<")="<<calculate_inverse(i,p)<<'\n';
     }
 }
 
-bool is_valid_point(int x,int y,int p)
+bool is_valid_point(std::uint32_t x,std::uint32_t y,std::uint32_t p)
 {
-    int b=7;
-    int y_square=static_cast<int>((static_cast<long long>(y)*y)%p);
-    int x_square=static_cast<int>((static_cast<long long>(x)*x)%p);
-    int x_cube=static_cast<int>((static_cast<long long>(x)*x_square)%p);
-    int x_cube_plus_b=static_cast<int>((static_cast<long long>(x_cube)+b)%p);
+    std::uint32_t b=7;
+    std::uint32_t y_square=static_cast<std::uint32_t>((static_cast<std::uint64_t>(y)*y)%p);
+    std::uint32_t x_square=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x)*x)%p);
+    std::uint32_t x_cube=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x)*x_square)%p);
+    std::uint32_t x_cube_plus_b=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x_cube)+b)%p);
     return (y_square==x_cube_plus_b);
 }
 
-int count_points(int p)
+std::uint32_t count_points(std::uint32_t p)
 {
-    int n=1;
+    std::uint32_t n=1;
     if(p<=1)
     {
         return n;
     }
-    std::vector<int> square_count(p,0);
-    for(int y=1;y<p;++y)
+    std::vector<std::uint32_t> square_count(p,0);
+    for(std::uint32_t y=1;y<p;++y)
     {
-        int square=static_cast<int>((static_cast<long long>(y)*y)%p);
+        std::uint32_t square=static_cast<std::uint32_t>((static_cast<std::uint64_t>(y)*y)%p);
         ++square_count[square];
     }
-    for(int x=1;x<p;++x)
+    for(std::uint32_t x=1;x<p;++x)
     {
-        int x_square=static_cast<int>((static_cast<long long>(x)*x)%p);
-        int x_cube=static_cast<int>((static_cast<long long>(x)*x_square)%p);
-        int rhs=static_cast<int>((static_cast<long long>(x_cube)+7)%p);
+        std::uint32_t x_square=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x)*x)%p);
+        std::uint32_t x_cube=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x)*x_square)%p);
+        std::uint32_t rhs=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x_cube)+7)%p);
         n+=square_count[rhs];
     }
     return n;
 }
 
-int next_prime(int value)
+std::uint32_t next_prime(std::uint32_t value)
 {
-    int result=(value+1);
+    std::uint32_t result=(value+1);
     while(!(is_prime(result)))
     {
         ++result;
@@ -103,9 +115,9 @@ int next_prime(int value)
     return result;
 }
 
-int previous_prime(int value)
+std::uint32_t previous_prime(std::uint32_t value)
 {
-    int result=(value-1);
+    std::uint32_t result=(value-1);
     while(!(is_prime(result)))
     {
         --result;
@@ -115,7 +127,7 @@ int previous_prime(int value)
 
 void print_counted_points()
 {
-    int p=67;
+    std::uint32_t p=67;
     while(p<100)
     {
         std::cout<<"p="<<p<<", n="<<count_points(p)<<'\n';
@@ -125,31 +137,31 @@ void print_counted_points()
 
 struct Point
 {
-    int x;
-    int y;
+    std::uint32_t x;
+    std::uint32_t y;
 };
 
-Point find_nearest_point(int p)
+Point find_nearest_point(std::uint32_t p)
 {
     Point result{0,0};
     if(p<=1)
     {
         return result;
     }
-    std::vector<int> smallest_root(p,0);
-    for(int y=1;y<p;++y)
+    std::vector<std::uint32_t> smallest_root(p,0);
+    for(std::uint32_t y=1;y<p;++y)
     {
-        int square=static_cast<int>((static_cast<long long>(y)*y)%p);
+        std::uint32_t square=static_cast<std::uint32_t>((static_cast<std::uint64_t>(y)*y)%p);
         if(smallest_root[square]==0)
         {
             smallest_root[square]=y;
         }
     }
-    for(int x=1;x<p;++x)
+    for(std::uint32_t x=1;x<p;++x)
     {
-        int x_square=static_cast<int>((static_cast<long long>(x)*x)%p);
-        int x_cube=static_cast<int>((static_cast<long long>(x)*x_square)%p);
-        int rhs=static_cast<int>((static_cast<long long>(x_cube)+7)%p);
+        std::uint32_t x_square=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x)*x)%p);
+        std::uint32_t x_cube=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x)*x_square)%p);
+        std::uint32_t rhs=static_cast<std::uint32_t>((static_cast<std::uint64_t>(x_cube)+7)%p);
         if(smallest_root[rhs]!=0)
         {
             result.x=x;
@@ -162,27 +174,27 @@ Point find_nearest_point(int p)
 
 void print_first_example()
 {
-    int p=79;
+    std::uint32_t p=79;
     Point base=find_nearest_point(p);
     std::cout<<"p="<<p<<", n="<<count_points(p)
              <<", base=("<<base.x<<','<<base.y<<")\n";
 }
 
-void find_n_bit(int bits)
+void find_n_bit(std::uint32_t bits)
 {
-    int p=previous_prime(1<<bits);
-    int min=(1<<(bits-1));
+    std::uint32_t p=previous_prime(1<<bits);
+    std::uint32_t min=(1<<(bits-1));
     while(p>min)
     {
-        int n=count_points(p);
+        std::uint32_t n=count_points(p);
         if((n!=p)&&(is_prime(n)))
         {
-            int second_p=count_points(n);
+            std::uint32_t second_p=count_points(n);
             if(p==second_p)
             {
                 Point base=find_nearest_point(p);
-                std::cout<<"p="<<p<<", n="<<count_points(p)
-                         <<", base=("<<base.x<<','<<base.y<<") "
+                std::cout<<"p=0x"<<to_string_32(p)<<", n=0x"<<to_string_32(count_points(p))
+                         <<", base=(0x"<<to_string_32(base.x)<<",0x"<<to_string_32(base.y)<<") "
                          <<bits<<"-bit\n";
                 return;
             }
@@ -193,7 +205,7 @@ void find_n_bit(int bits)
 
 int main()
 {
-    for(int i=2;i<20;++i)
+    for(std::uint32_t i=2;i<20;++i)
     {
         find_n_bit(i);
     }

@@ -4,15 +4,15 @@ Trying to reproduce an example, made by Garlo Nicon here: https://bitcointalk.or
 
 Current results:
 ```
-p=79, n=67, base=(1,18) 7-bit
-p=967, n=907, base=(1,88) 10-bit
-p=1459, n=1399, base=(3,564) 11-bit
-p=3853, n=3739, base=(3,534) 12-bit
-p=7723, n=7561, base=(2,1969) 13-bit
-p=14071, n=13933, base=(1,3660) 14-bit
-p=32503, n=32839, base=(1,477) 15-bit
-p=65173, n=65647, base=(3,1876) 16-bit
-p=130579, n=131251, base=(5,53388) 17-bit
-p=260647, n=259627, base=(1,72244) 18-bit
-p=524221, n=522961, base=(2,181433) 19-bit
+p=0x0000004f, n=0x00000043, base=(0x00000001,0x00000012) 7-bit
+p=0x000003c7, n=0x0000038b, base=(0x00000001,0x00000058) 10-bit
+p=0x000005b3, n=0x00000577, base=(0x00000003,0x00000234) 11-bit
+p=0x00000f0d, n=0x00000e9b, base=(0x00000003,0x00000216) 12-bit
+p=0x00001e2b, n=0x00001d89, base=(0x00000002,0x000007b1) 13-bit
+p=0x000036f7, n=0x0000366d, base=(0x00000001,0x00000e4c) 14-bit
+p=0x00007ef7, n=0x00008047, base=(0x00000001,0x000001dd) 15-bit
+p=0x0000fe95, n=0x0001006f, base=(0x00000003,0x00000754) 16-bit
+p=0x0001fe13, n=0x000200b3, base=(0x00000005,0x0000d08c) 17-bit
+p=0x0003fa27, n=0x0003f62b, base=(0x00000001,0x00011a34) 18-bit
+p=0x0007ffbd, n=0x0007fad1, base=(0x00000002,0x0002c4b9) 19-bit
 ```
