@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 bool is_prime(int number)
 {
@@ -14,7 +15,7 @@ bool is_prime(int number)
     {
         return false;
     }
-    for(int i=3;i*i<=number;i+=2)
+    for(int i=3;i<=number/i;i+=2)
     {
         if(number==i)
         {
@@ -62,25 +63,32 @@ void print_inverses()
 bool is_valid_point(int x,int y,int p)
 {
     int b=7;
-    int y_square=(y*y)%p;
-    int x_square=(x*x)%p;
-    int x_cube=(x*x_square)%p;
-    int x_cube_plus_b=(x_cube+b)%p;
+    int y_square=static_cast<int>((static_cast<long long>(y)*y)%p);
+    int x_square=static_cast<int>((static_cast<long long>(x)*x)%p);
+    int x_cube=static_cast<int>((static_cast<long long>(x)*x_square)%p);
+    int x_cube_plus_b=static_cast<int>((static_cast<long long>(x_cube)+b)%p);
     return (y_square==x_cube_plus_b);
 }
 
 int count_points(int p)
 {
     int n=1;
+    if(p<=1)
+    {
+        return n;
+    }
+    std::vector<int> square_count(p,0);
     for(int y=1;y<p;++y)
     {
-        for(int x=1;x<p;++x)
-        {
-            if(is_valid_point(x,y,p))
-            {
-                ++n;
-            }
-        }
+        int square=static_cast<int>((static_cast<long long>(y)*y)%p);
+        ++square_count[square];
+    }
+    for(int x=1;x<p;++x)
+    {
+        int x_square=static_cast<int>((static_cast<long long>(x)*x)%p);
+        int x_cube=static_cast<int>((static_cast<long long>(x)*x_square)%p);
+        int rhs=static_cast<int>((static_cast<long long>(x_cube)+7)%p);
+        n+=square_count[rhs];
     }
     return n;
 }
@@ -123,19 +131,30 @@ struct Point
 
 Point find_nearest_point(int p)
 {
-    Point result;
-    result.x=0;
-    result.y=0;
+    Point result{0,0};
+    if(p<=1)
+    {
+        return result;
+    }
+    std::vector<int> smallest_root(p,0);
+    for(int y=1;y<p;++y)
+    {
+        int square=static_cast<int>((static_cast<long long>(y)*y)%p);
+        if(smallest_root[square]==0)
+        {
+            smallest_root[square]=y;
+        }
+    }
     for(int x=1;x<p;++x)
     {
-        for(int y=1;y<p;++y)
+        int x_square=static_cast<int>((static_cast<long long>(x)*x)%p);
+        int x_cube=static_cast<int>((static_cast<long long>(x)*x_square)%p);
+        int rhs=static_cast<int>((static_cast<long long>(x_cube)+7)%p);
+        if(smallest_root[rhs]!=0)
         {
-            if(is_valid_point(x,y,p))
-            {
-                result.x=x;
-                result.y=y;
-                return result;
-            }
+            result.x=x;
+            result.y=smallest_root[rhs];
+            return result;
         }
     }
     return result;
@@ -174,7 +193,7 @@ void find_n_bit(int bits)
 
 int main()
 {
-    for(int i=2;i<14;++i)
+    for(int i=2;i<20;++i)
     {
         find_n_bit(i);
     }
