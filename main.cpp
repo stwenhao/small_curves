@@ -193,7 +193,7 @@ void find_n_bit(std::uint32_t bits)
             if(p==second_p)
             {
                 Point base=find_nearest_point(p);
-                std::cout<<"p=0x"<<to_string_32(p)<<", n="<<to_string_32(count_points(p))
+                std::cout<<"p=0x"<<to_string_32(p)<<", n=0x"<<to_string_32(count_points(p))
                          <<", base=(0x"<<to_string_32(base.x)<<",0x"<<to_string_32(base.y)<<") "
                          <<bits<<"-bit\n";
                 return;
